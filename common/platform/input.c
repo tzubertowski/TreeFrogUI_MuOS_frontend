@@ -1910,6 +1910,10 @@ static int input_wait_event(SDL_Event *ev, const int timeout) {
 }
 
 void mux_input_task(const mux_input_options *opts) {
+#ifdef MUOS_HOST_ADAPTER
+    // The host advances input through mux_input_host_step().
+    (void) opts;
+#else
     init_input_maps();
 
     stop_flag = 0;
@@ -2049,6 +2053,7 @@ void mux_input_task(const mux_input_options *opts) {
 
     fe_perf_flush();
     close_all_devices();
+#endif
 }
 
 int mux_input_pressed_any(const uint64_t mask) {
